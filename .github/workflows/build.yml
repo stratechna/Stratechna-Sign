@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     tags: ['v*']
+  schedule:
+    - cron: '0 5 * * 1'  # Segundas às 05:00 UTC
   workflow_dispatch:
     inputs:
       docuseal_version:
@@ -45,6 +47,7 @@ jobs:
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            type=raw,value={{date 'YYYY.MM.DD'}}
 
       - name: Determinar versão DocuSeal
         id: docuseal_ver
