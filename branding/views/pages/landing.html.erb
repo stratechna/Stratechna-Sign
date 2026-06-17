@@ -1,0 +1,72 @@
+<section class="flex items-center justify-center">
+  <div class="py-10 mx-auto max-w-7xl">
+    <div class="max-w-xl mx-auto">
+      <div class="text-center">
+        <div class="relative flex flex-col items-center">
+          <%= render 'shared/logo', width: '100', height: '100' %>
+          <h1 class="text-6xl font-bold mt-4 mb-4">
+            Stratechna Sign
+          </h1>
+        </div>
+        <h2 class="mt-4 mb-16 text-lg text-center text-gray-600">
+          Plataforma segura de assinatura electrónica de documentos para a sua organização.
+        </h2>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 gap-12 md:gap-10 md:grid-cols-2">
+      <div class="card bg-base-200">
+        <div class="card-body">
+          <div class="text-center transition-all">
+            <div class="inline-block p-4 mb-4 -mt-16 bg-base-content rounded-full">
+              <%= svg_icon('writing_sign', class: 'w-10 h-10 text-base-100 stroke-1') %>
+            </div>
+            <h3 class="mb-4 text-2xl font-semibold">Assinatura Digital</h3>
+            <p class="text-base text-gray-500">
+              Assine documentos digitalmente de forma segura e juridicamente válida, em qualquer dispositivo.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="card bg-base-200">
+        <div class="card-body">
+          <div class="text-center transition-all">
+            <div class="inline-block p-4 mb-4 -mt-16 bg-base-content rounded-full">
+              <%= svg_icon('devices', class: 'w-10 h-10 text-base-100') %>
+            </div>
+            <h3 class="mb-4 text-2xl font-semibold">Multi-dispositivo</h3>
+            <p class="text-base text-gray-500">
+              Reveja e assine documentos a partir de qualquer dispositivo. Formulários optimizados para todos os ecrãs.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="card bg-base-200">
+        <div class="card-body">
+          <div class="text-center transition-all">
+            <div class="inline-block p-4 mb-4 -mt-16 bg-base-content rounded-full">
+              <%= svg_icon('shield_check', class: 'w-10 h-10 text-base-100') %>
+            </div>
+            <h3 class="mb-4 text-2xl font-semibold">Seguro</h3>
+            <p class="text-base text-gray-500">
+              Infraestrutura dedicada para garantir que os seus documentos estão acessíveis apenas dentro da sua organização.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="card bg-base-200">
+        <div class="card-body">
+          <div class="text-center transition-all">
+            <div class="inline-block p-4 mb-4 -mt-16 bg-base-content rounded-full">
+              <%= svg_icon('certificate', class: 'w-10 h-10 text-base-100') %>
+            </div>
+            <h3 class="mb-4 text-2xl font-semibold">Auditoria Completa</h3>
+            <p class="text-base text-gray-500">
+              Registo completo de todas as acções e assinaturas. Rastreabilidade total para conformidade legal.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<%= render 'shared/attribution', with_counter: true %>

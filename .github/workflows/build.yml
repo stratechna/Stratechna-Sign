@@ -1,0 +1,74 @@
+# =============================================================
+# GitHub Actions — Build e push da imagem Stratechna Sign
+#
+# Triggers:
+#   - Push para main (build + push :latest)
+#   - Push de tag v* (build + push :vX.Y.Z)
+#   - Manual (workflow_dispatch) com versão DocuSeal opcional
+# =============================================================
+
+name: Build Stratechna Sign
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      docuseal_version:
+        description: 'Versão DocuSeal base (ex: 2.5.0 ou latest)'
+        required: false
+        default: 'latest'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: stratechna/stratechna-sign
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login no GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extrair metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - name: Determinar versão DocuSeal
+        id: docuseal_ver
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ inputs.docuseal_version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=latest" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build e Push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            DOCUSEAL_VERSION=${{ steps.docuseal_ver.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
