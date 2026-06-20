@@ -47,3 +47,4 @@ COPY branding/views/shared/_title.html.erb       /app/app/views/shared/_title.ht
 COPY branding/packs/submission_form/completed.vue /app/app/javascript/submission_form/completed.vue
 COPY branding/packs/template_builder/logo.vue /app/app/javascript/template_builder/logo.vue
 COPY branding/packs/js/application-e44c9e2c60a12cf5675a.js /app/public/packs/js/application-e44c9e2c60a12cf5675a.js
+RUN gzip -c /app/public/packs/js/application-e44c9e2c60a12cf5675a.js > /app/public/packs/js/application-e44c9e2c60a12cf5675a.js.gz
