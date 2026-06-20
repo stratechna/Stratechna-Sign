@@ -45,3 +45,4 @@ COPY branding/views/shared/_title.html.erb       /app/app/views/shared/_title.ht
 
 # cache-bust: 20260620145057
 COPY branding/packs/submission_form/completed.vue /app/app/javascript/submission_form/completed.vue
+COPY branding/packs/template_builder/logo.vue /app/app/javascript/template_builder/logo.vue
