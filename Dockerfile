@@ -41,3 +41,4 @@ COPY branding/views/layouts/_head_tags.html.erb      /app/app/views/layouts/_hea
 COPY branding/packs/js/form-396c98213f11329535fa.js     /app/public/packs/js/form-396c98213f11329535fa.js
 COPY branding/packs/js/form-396c98213f11329535fa.js.gz  /app/public/packs/js/form-396c98213f11329535fa.js.gz
 COPY branding/packs/js/form-396c98213f11329535fa.js.br  /app/public/packs/js/form-396c98213f11329535fa.js.br
+COPY branding/views/shared/_title.html.erb       /app/app/views/shared/_title.html.erb
