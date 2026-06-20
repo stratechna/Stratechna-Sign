@@ -44,3 +44,4 @@ COPY branding/packs/js/form-396c98213f11329535fa.js.br  /app/public/packs/js/for
 COPY branding/views/shared/_title.html.erb       /app/app/views/shared/_title.html.erb
 
 # cache-bust: 20260620145057
+COPY branding/packs/submission_form/completed.vue /app/app/javascript/submission_form/completed.vue
