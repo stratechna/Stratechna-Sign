@@ -43,7 +43,11 @@ COPY branding/packs/js/form-396c98213f11329535fa.js.gz  /app/public/packs/js/for
 COPY branding/packs/js/form-396c98213f11329535fa.js.br  /app/public/packs/js/form-396c98213f11329535fa.js.br
 COPY branding/views/shared/_title.html.erb       /app/app/views/shared/_title.html.erb
 
-# cache-bust: 20260620145057
+COPY branding/views/start_form/show.html.erb /app/app/views/start_form/show.html.erb
+COPY branding/views/start_form/email_verification.html.erb /app/app/views/start_form/email_verification.html.erb
+COPY branding/views/start_form/private.html.erb /app/app/views/start_form/private.html.erb
+COPY branding/views/submit_form/email_2fa.html.erb /app/app/views/submit_form/email_2fa.html.erb
+# cache-bust: 20260621155152
 COPY branding/packs/submission_form/completed.vue /app/app/javascript/submission_form/completed.vue
 COPY branding/packs/template_builder/logo.vue /app/app/javascript/template_builder/logo.vue
 COPY branding/packs/js/application-e44c9e2c60a12cf5675a.js /app/public/packs/js/application-e44c9e2c60a12cf5675a.js
