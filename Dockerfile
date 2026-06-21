@@ -47,7 +47,10 @@ COPY branding/views/start_form/show.html.erb /app/app/views/start_form/show.html
 COPY branding/views/start_form/email_verification.html.erb /app/app/views/start_form/email_verification.html.erb
 COPY branding/views/start_form/private.html.erb /app/app/views/start_form/private.html.erb
 COPY branding/views/submit_form/email_2fa.html.erb /app/app/views/submit_form/email_2fa.html.erb
-# cache-bust: 20260621155152
+COPY branding/views/shared/_email_attribution.html.erb /app/app/views/shared/_email_attribution.html.erb
+COPY branding/mailers/application_mailer.rb /app/app/mailers/application_mailer.rb
+COPY branding/locales/i18n.yml /app/config/locales/i18n.yml
+# cache-bust: 20260621161254
 COPY branding/packs/submission_form/completed.vue /app/app/javascript/submission_form/completed.vue
 COPY branding/packs/template_builder/logo.vue /app/app/javascript/template_builder/logo.vue
 COPY branding/packs/js/application-e44c9e2c60a12cf5675a.js /app/public/packs/js/application-e44c9e2c60a12cf5675a.js
