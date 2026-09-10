@@ -1,75 +1,40 @@
 # Stratechna Sign
 
-Imagem Docker customizada do [DocuSeal](https://www.docuseal.com) com branding Stratechna.
+DocuSeal com a marca Stratechna.
 
-## Arquitectura
+    ghcr.io/stratechna/stratechna-sign:3.2      ← o que os clientes usam
+    ghcr.io/stratechna/stratechna-sign:3.2.1    ← versão exacta
+    ghcr.io/stratechna/stratechna-sign:latest   ← compatibilidade
 
-```
-stratechna-sign/
-├── Dockerfile                    # Imagem baseada em docuseal/docuseal:latest
-├── branding/
-│   ├── public/                   # Assets estáticos (logo, favicons)
-│   ├── views/                    # Views ERB patchadas
-│   │   ├── shared/               # _logo, _powered_by
-│   │   ├── pages/                # landing
-│   │   ├── start_form/           # _docuseal_logo
-│   │   ├── submit_form/          # _docuseal_logo
-│   │   └── layouts/              # _head_tags
-│   └── packs/js/                 # JS compilado patchado
-├── scripts/
-│   ├── novo-cliente.sh           # Provisionar nova instância
-│   ├── listar-clientes.sh        # Listar instâncias activas
-│   ├── remover-cliente.sh        # Remover instância
-│   ├── update-branding.sh        # Extrair branding do container live
-│   └── upgrade.sh                # Upgrade de versão DocuSeal
-└── .github/workflows/build.yml   # Build automático no GHCR
-```
+## Licença e atribuição
 
-## Instâncias
+O DocuSeal é AGPL-3.0 com termos adicionais (secção 7(b), `LICENSE_ADDITIONAL_TERMS`):
+a atribuição original ao DocuSeal tem de ficar nas interfaces interactivas. Por isso o
+«Powered by DocuSeal», com o link original, continua nas páginas — e a verificação
+**falha se ele desaparecer**. Em tudo o resto, o produto chama-se Stratechna Sign.
 
-Cada cliente tem a sua instância isolada em `/opt/stratechna/sign/clientes/<slug>/`:
-- URL: `https://<slug>.sign.stratechna.com`
-- Containers: `sign-<slug>-web`, `sign-<slug>-db`
-- Rede interna isolada: `sign_<slug>_internal`
-- BD separada, volume separado
+## Como a marca é aplicada — e porque sobrevive às actualizações
 
-## Criar nova instância
+1. **Versão fixa.** `ARG DOCUSEAL_VERSION` no `Dockerfile`.
+2. **Só ficheiros próprios.** Imagens em `branding/public/`; textos próprios em
+   `branding/ficheiros/stratechna.yml`, carregado depois das traduções do DocuSeal;
+   o parcial do logótipo (`_logo.html.erb`, só o SVG), protegido por uma verificação da forma.
+3. **Trocas por padrão, com mínimo.** `branding/aplicar.rb` muda o nome do produto na
+   constante `PRODUCT_NAME` (um só ponto, usado em ~20 sítios), os títulos, o remetente dos
+   emails e o nome nas traduções de todas as línguas. Se um padrão deixar de existir, **o
+   build falha**.
+4. **Teste antes de publicar.** `branding/verificar.sh` arranca a imagem e verifica as
+   páginas, o manifest, o favicon e — por dentro, com `rails runner` — o nome do produto,
+   a atribuição, os textos próprios e que nenhuma tradução ficou com o nome do upstream.
+5. **Os clientes seguem a tag `3.2`**, que só avança com imagens que passaram o teste.
 
-```bash
-bash /opt/stratechna/sign/scripts/novo-cliente.sh <slug> <email-admin> [empresa]
-# Exemplo:
-bash /opt/stratechna/sign/scripts/novo-cliente.sh acme admin@acme.pt "ACME, Lda."
-```
+O JavaScript compilado não é tocado: os links que lá estão são da atribuição e das
+páginas legais do DocuSeal.
 
-## Actualizar branding
+## Actualizar o DocuSeal
 
-Quando o branding muda (novo logo, textos, etc.):
+O workflow `upstream.yml` abre um issue quando sai versão nova. Mudar
+`DOCUSEAL_VERSION` e fazer push. Testar localmente:
 
-```bash
-# 1. Fazer as alterações manualmente no container sign-stratechna-web
-# 2. Extrair para o repositório
-bash scripts/update-branding.sh
-# 3. Commit e push → GitHub Actions reconstrói a imagem
-git add branding/
-git commit -m "chore: actualizar branding"
-git push
-```
-
-## Upgrade de versão DocuSeal
-
-```bash
-# Via GitHub Actions (recomendado):
-# → Ir a Actions → Build Stratechna Sign → Run workflow → inserir versão
-
-# Ou manualmente no servidor:
-bash /opt/stratechna/sign/scripts/upgrade.sh 2.6.0
-```
-
-## Template docker-compose por cliente
-
-O ficheiro `template/docker-compose.yml` usa a imagem customizada:
-```yaml
-image: ghcr.io/stratechna/stratechna-sign:latest
-```
-
-Quando o GitHub Actions constrói uma nova imagem, basta fazer pull em cada instância.
+    docker build -t sign:teste .
+    bash branding/verificar.sh sign:teste

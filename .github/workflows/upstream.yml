@@ -1,0 +1,33 @@
+name: Versão nova do DocuSeal
+
+# A imagem não se actualiza sozinha. Isto só avisa, com um issue, quando o
+# DocuSeal publica uma versão diferente da que está fixada no Dockerfile.
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          FIXADA=$(sed -nE 's/^ARG DOCUSEAL_VERSION=([0-9.]+)$/\1/p' Dockerfile)
+          NOVA=$(gh release view --repo docusealco/docuseal --json tagName -q .tagName | sed 's/^v//')
+          echo "fixada: $FIXADA | upstream: $NOVA"
+          [ -n "$NOVA" ] && [ "$NOVA" != "$FIXADA" ] || exit 0
+          TITULO="DocuSeal $NOVA disponível (fixado em $FIXADA)"
+          [ "$(gh issue list --state open --search "in:title \"$TITULO\"" --json number -q length)" = "0" ] || exit 0
+          gh issue create --title "$TITULO" --body "Notas: https://github.com/docusealco/docuseal/releases/tag/$NOVA
+
+          Para actualizar:
+          1. Mudar \`ARG DOCUSEAL_VERSION\` no Dockerfile para \`$NOVA\` e fazer push.
+          2. O build falha se alguma troca do \`branding/aplicar.rb\` deixar de encaixar; a verificação falha se DocuSeal aparecer fora da atribuição ou se a atribuição desaparecer. Ajustar os padrões — nunca copiar ficheiros inteiros do upstream.
+          3. Mudança de versão menor (ex. 3.2 → 3.3): os clientes seguem a tag \`3.2\` e não mudam sozinhos. Backup, teste no tenant \`teste\`, mudar a tag nos compose."

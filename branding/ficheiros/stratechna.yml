@@ -1,0 +1,26 @@
+# Textos próprios do Stratechna Sign. Carregado depois do i18n.yml do DocuSeal
+# (config/locales/zz_stratechna.yml), por isso estas chaves sobrepõem-se às dele.
+# Só textos que não resultam de trocar o nome — essas trocas estão no aplicar.rb.
+# No i18n.yml do DocuSeal, pt-PT e en-US/en-GB são cópias (<<: *pt / *en) feitas
+# dentro desse ficheiro: por isso as mesmas chaves repetem-se aqui para elas.
+pt: &pt
+  docuseal_support: Suporte Stratechna
+  sign_up_in_docuseal_console_to_upgrade_on_premises_app_is_completely_standalone_console_is_used_only_to_manage_your_license: Contacte o suporte Stratechna para fazer upgrade. A aplicação é completamente autónoma.
+  sent_using_product_name_open_source_software_html: 'Enviado através da Assinatura Digital de <a href="https://stratechna.com">Stratechna Sign</a>'
+  sent_using_product_name_free_document_signing_html: 'Enviado através da Assinatura Digital de <a href="https://stratechna.com">Stratechna Sign</a>'
+  sent_using_product_name_in_testing_mode_html: 'Enviado através da Assinatura Digital de <a href="https://stratechna.com">Stratechna Sign</a> (modo de teste)'
+  time:
+    formats:
+      detailed: "%A, %d de %B de %Y, %H:%M:%Sh"
+pt-PT:
+  <<: *pt
+en: &en
+  docuseal_support: Stratechna Support
+  sign_up_in_docuseal_console_to_upgrade_on_premises_app_is_completely_standalone_console_is_used_only_to_manage_your_license: Contact Stratechna support to upgrade. The application is fully standalone.
+  sent_using_product_name_open_source_software_html: 'Sent with <a href="https://stratechna.com">Stratechna Sign</a> digital signature'
+  sent_using_product_name_free_document_signing_html: 'Sent with <a href="https://stratechna.com">Stratechna Sign</a> digital signature'
+  sent_using_product_name_in_testing_mode_html: 'Sent with <a href="https://stratechna.com">Stratechna Sign</a> digital signature (testing mode)'
+en-US:
+  <<: *en
+en-GB:
+  <<: *en

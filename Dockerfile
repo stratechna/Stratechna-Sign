@@ -1,57 +1,25 @@
-# =============================================================
-# Stratechna Sign — Imagem customizada baseada em DocuSeal
+# Stratechna Sign — DocuSeal com a marca Stratechna.
 #
-# Build: docker build -t ghcr.io/stratechna/stratechna-sign:latest .
-# Push:  docker push ghcr.io/stratechna/stratechna-sign:latest
-#
-# O branding é aplicado sobre a imagem oficial DocuSeal:
-#   - Assets públicos (logo, favicons)
-#   - Views ERB (landing, logo, head_tags, powered_by)
-#   - JS compilado patchado (form - Powered by)
-# =============================================================
-
-ARG DOCUSEAL_VERSION=latest
+# A versão do DocuSeal está FIXA. Actualizar é mudar esta linha, de propósito:
+# o aplicar.rb falha o build se alguma troca deixar de encaixar, e o verificar.sh
+# (no workflow) falha se o nome do upstream ficar visível fora da atribuição
+# exigida pela licença — ou se essa atribuição desaparecer.
+ARG DOCUSEAL_VERSION=3.2.1
 FROM docuseal/docuseal:${DOCUSEAL_VERSION}
+ARG DOCUSEAL_VERSION
 
-LABEL org.opencontainers.image.source="https://github.com/stratechna/stratechna-sign"
-LABEL org.opencontainers.image.description="Stratechna Sign — DocuSeal com branding Stratechna"
-LABEL org.opencontainers.image.vendor="Stratechna"
+LABEL org.opencontainers.image.source="https://github.com/stratechna/Stratechna-Sign" \
+      org.opencontainers.image.title="Stratechna Sign" \
+      org.opencontainers.image.vendor="Stratechna" \
+      org.opencontainers.image.version="${DOCUSEAL_VERSION}" \
+      org.opencontainers.image.base.name="docuseal/docuseal:${DOCUSEAL_VERSION}"
 
-# ── Assets públicos ───────────────────────────────────────────
-COPY branding/public/logo.svg                        /app/public/logo.svg
-COPY branding/public/favicon.svg                     /app/public/favicon.svg
-COPY branding/public/favicon.ico                     /app/public/favicon.ico
-COPY branding/public/favicon-16x16.png               /app/public/favicon-16x16.png
-COPY branding/public/favicon-32x32.png               /app/public/favicon-32x32.png
-COPY branding/public/favicon-96x96.png               /app/public/favicon-96x96.png
-COPY branding/public/apple-icon-180x180.png           /app/public/apple-icon-180x180.png
-COPY branding/public/apple-touch-icon.png             /app/public/apple-touch-icon.png
-COPY branding/public/apple-touch-icon-precomposed.png /app/public/apple-touch-icon-precomposed.png
-COPY branding/public/preview.png                     /app/public/preview.png
+# Imagens próprias (logótipo, favicons, pré-visualização)
+COPY branding/public/ /app/public/
 
-# ── Views ERB ─────────────────────────────────────────────────
-COPY branding/views/shared/_logo.html.erb            /app/app/views/shared/_logo.html.erb
-COPY branding/views/shared/_powered_by.html.erb      /app/app/views/shared/_powered_by.html.erb
-COPY branding/views/pages/landing.html.erb           /app/app/views/pages/landing.html.erb
-COPY branding/views/start_form/_docuseal_logo.html.erb  /app/app/views/start_form/_docuseal_logo.html.erb
-COPY branding/views/submit_form/_docuseal_logo.html.erb /app/app/views/submit_form/_docuseal_logo.html.erb
-COPY branding/views/layouts/_head_tags.html.erb      /app/app/views/layouts/_head_tags.html.erb
+# Textos próprios: carregados depois do i18n.yml do DocuSeal
+COPY branding/ficheiros/stratechna.yml /app/config/locales/zz_stratechna.yml
 
-# ── JS patchado (Powered by DocuSeal → texto simples) ─────────
-COPY branding/packs/js/form-396c98213f11329535fa.js     /app/public/packs/js/form-396c98213f11329535fa.js
-COPY branding/packs/js/form-396c98213f11329535fa.js.gz  /app/public/packs/js/form-396c98213f11329535fa.js.gz
-COPY branding/packs/js/form-396c98213f11329535fa.js.br  /app/public/packs/js/form-396c98213f11329535fa.js.br
-COPY branding/views/shared/_title.html.erb       /app/app/views/shared/_title.html.erb
-
-COPY branding/views/start_form/show.html.erb /app/app/views/start_form/show.html.erb
-COPY branding/views/start_form/email_verification.html.erb /app/app/views/start_form/email_verification.html.erb
-COPY branding/views/start_form/private.html.erb /app/app/views/start_form/private.html.erb
-COPY branding/views/submit_form/email_2fa.html.erb /app/app/views/submit_form/email_2fa.html.erb
-COPY branding/views/shared/_email_attribution.html.erb /app/app/views/shared/_email_attribution.html.erb
-COPY branding/mailers/application_mailer.rb /app/app/mailers/application_mailer.rb
-COPY branding/locales/i18n.yml /app/config/locales/i18n.yml
-# cache-bust: 20260621165255
-COPY branding/packs/submission_form/completed.vue /app/app/javascript/submission_form/completed.vue
-COPY branding/packs/template_builder/logo.vue /app/app/javascript/template_builder/logo.vue
-COPY branding/packs/js/application-e44c9e2c60a12cf5675a.js /app/public/packs/js/application-e44c9e2c60a12cf5675a.js
-RUN gzip -c /app/public/packs/js/application-e44c9e2c60a12cf5675a.js > /app/public/packs/js/application-e44c9e2c60a12cf5675a.js.gz && rm -f /app/public/packs/js/application-e44c9e2c60a12cf5675a.js.br
+# Trocas por padrão, com mínimo de ocorrências; falha se não encaixarem
+COPY branding/ficheiros/_logo.html.erb branding/aplicar.rb /tmp/branding/
+RUN ruby /tmp/branding/aplicar.rb && rm -rf /tmp/branding
