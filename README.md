@@ -3,7 +3,7 @@
 DocuSeal com a marca Stratechna.
 
     ghcr.io/stratechna/stratechna-sign:3.2      ← o que os clientes usam
-    ghcr.io/stratechna/stratechna-sign:3.2.1    ← versão exacta
+    ghcr.io/stratechna/stratechna-sign:3.2.4    ← versão exacta
     ghcr.io/stratechna/stratechna-sign:latest   ← compatibilidade
 
 ## Licença e atribuição

@@ -4,7 +4,7 @@
 # o aplicar.rb falha o build se alguma troca deixar de encaixar, e o verificar.sh
 # (no workflow) falha se o nome do upstream ficar visível fora da atribuição
 # exigida pela licença — ou se essa atribuição desaparecer.
-ARG DOCUSEAL_VERSION=3.2.1
+ARG DOCUSEAL_VERSION=3.2.4
 FROM docuseal/docuseal:${DOCUSEAL_VERSION}
 ARG DOCUSEAL_VERSION
 
