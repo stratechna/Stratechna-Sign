@@ -44,6 +44,16 @@ echo "$M" | grep -q '"name": *"Stratechna Sign"' && ok "manifest.json com o noss
 [ "$(curl -fs "$B/favicon.ico" | sha256sum | cut -c1-16)" = "$(sha256sum < "$DIR/public/favicon.ico" | cut -c1-16)" ] \
   && ok "favicon.ico é o nosso" || falha "favicon.ico não é o nosso"
 
+echo "== aspecto Stratechna (folha própria e DM Sans servida pela app) =="
+P=$(curl -fsS "$B/setup")
+echo "$P" | grep -q 'href="/stratechna/aspecto.css' && ok "/setup liga a folha aspecto.css" || falha "/setup sem a folha aspecto.css"
+A=$(curl -fsS "$B/stratechna/aspecto.css")
+echo "$A" | grep -q -- '--b1: 195 29% 97%' && ok "aspecto.css servida com as fichas" || falha "aspecto.css não servida"
+curl -fsS "$B/stratechna/fonts.css" | grep -q 'DM Sans' && ok "fonts.css servida" || falha "fonts.css não servida"
+W=$(curl -fsS "$B/stratechna/fonts/dm-sans-latin-wght-normal.woff2" | head -c 4)
+[ "$W" = "wOF2" ] && ok "woff2 servida" || falha "woff2 não servida («$W»)"
+echo "$P$A" | grep -qi 'fonts.googleapis\|fonts.gstatic' && falha "pedido ao Google Fonts" || ok "nada vai ao Google Fonts"
+
 echo "== por dentro da aplicação =="
 docker cp "$DIR/verificar.rb" $ID:/tmp/verificar.rb
 R=$(docker exec $ID sh -c 'cd /app && bin/rails runner /tmp/verificar.rb' 2>&1)

@@ -1,0 +1,55 @@
+/* Stratechna Sign — paleta e letra Stratechna sobre o DocuSeal.
+ *
+ * Ficheiro próprio, ligado no fim do <head> dos layouts (aplicar.rb), depois da
+ * folha do DocuSeal: só redefine as fichas do daisyUI (--b1, --bc, --n, …) e o
+ * botão principal. Nenhuma folha do upstream é alterada.
+ *
+ * A regra (docs/PLANO-ASPECTO-ORBIT-APPS.md §1): ardósia na estrutura,
+ * vermelho #b20009 só no botão principal, cores de informação intactas,
+ * DM Sans servida pela própria app (RGPD: nada vai ao Google).
+ */
+@import url("fonts.css?v=1");
+
+/* Fichas do daisyUI, em «H S% L%». Os bege/roxo do DocuSeal passam a
+ * cinzentos-ardósia com a mesma luminosidade degrau a degrau. */
+:root {
+  --b1: 195 29% 97%;   /* #f6f9fa */
+  --b2: 207 24% 93%;   /* #e8edf1 */
+  --b3: 203 22% 88%;   /* #dbe3e8 */
+  --bc: 202 32% 15%;   /* #1a2a33 — texto */
+  --n:  202 32% 15%;   /* estrutura (círculos, distintivos) */
+  --nf: 202 35% 9%;
+  --nc: 203 16% 81%;
+  --p:  203 22% 89%;
+  --pf: 203 16% 82%;
+  --pc: 202 35% 17%;
+  --s:  203 16% 78%;
+  --sf: 203 16% 71%;
+  --sc: 202 35% 13%;
+  /* --a (âmbar), --in, --su, --wa, --er: informação — ficam. */
+}
+
+html, body, button, input, select, textarea {
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+}
+body { -webkit-font-smoothing: antialiased; }
+
+/* O botão principal (Entrar, Criar, Enviar, Assinar): vermelho de acção. */
+.base-button {
+  background-color: #b20009;
+  border-color: #b20009;
+  color: #fff;
+}
+.base-button:hover {
+  background-color: #8c0007;
+  border-color: #8c0007;
+}
+.base-button:active { background-color: #730006; border-color: #730006; }
+.base-button:disabled,
+.base-button[disabled] {
+  background-color: hsl(203 16% 78%);
+  border-color: hsl(203 16% 78%);
+  color: hsl(202 15% 32%);
+}
+
+::selection { background: rgba(178, 0, 9, .16); }

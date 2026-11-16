@@ -87,6 +87,27 @@ rescue StandardError => e
   $erros << "traduções não carregam: #{e.message[0, 150]}"
 end
 
+# ── 7. Aspecto: a nossa folha (public/stratechna/aspecto.css) no fim do <head>,
+#       DEPOIS da folha do DocuSeal, para as fichas redefinidas ganharem.
+#       Só se acrescenta uma linha; o layout do upstream fica igual.
+ASPECTO = "    <link rel=\"stylesheet\" href=\"/stratechna/aspecto.css?v=1\" media=\"all\">\n  </head>"
+%w[application form plain].each do |l|
+  rel = "app/views/layouts/#{l}.html.erb"
+  texto = APP.join(rel).exist? ? APP.join(rel).read : ''
+  unless texto.include?('stylesheet_pack_tag')
+    $erros << "#{rel}: sem stylesheet_pack_tag — o layout mudou de forma"
+    next
+  end
+  trocar(rel, "  </head>", ASPECTO)
+  depois = APP.join(rel).read
+  if depois.index('stratechna/aspecto.css').to_i < depois.index('stylesheet_pack_tag').to_i
+    $erros << "#{rel}: a nossa folha ficou antes da do DocuSeal"
+  end
+end
+%w[aspecto.css fonts.css fonts/dm-sans-latin-wght-normal.woff2].each do |f|
+  $erros << "public/stratechna/#{f} em falta" unless APP.join('public/stratechna', f).exist?
+end
+
 if $erros.any?
   warn 'BRANDING FALHOU — o upstream mudou e estas trocas já não encaixam:'
   $erros.each { |e| warn "  - #{e}" }
