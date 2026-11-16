@@ -32,3 +32,13 @@ end
 chk "nenhuma tradução com DocuSeal (#{sobras.size})#{sobras.first(3).map { |s| "\n    #{s}" }.join}", sobras.empty?
 
 chk "remetente por omissão = #{ApplicationMailer.default[:from]}", ApplicationMailer.default[:from].include?('Stratechna')
+
+# A raiz sem sessão vai para a entrada, não para a «landing» do DocuSeal. Sem
+# utilizadores a app manda para /setup antes disso, por isso finge-se que existe um.
+User.define_singleton_method(:exists?) { |*| true }
+s = ActionDispatch::Integration::Session.new(Rails.application)
+s.host! 'localhost'
+s.https!
+s.get '/'
+chk "raiz sem sessão → #{s.response.status} #{s.response.location}",
+    s.response.redirect? && s.response.location.to_s.end_with?('/sign_in')

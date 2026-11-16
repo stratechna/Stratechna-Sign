@@ -108,6 +108,15 @@ end
   $erros << "public/stratechna/#{f} em falta" unless APP.join('public/stratechna', f).exist?
 end
 
+# ── 8. A página inicial sem sessão: a «landing» do DocuSeal (nome em grande,
+#       versão e marketing em inglês do projecto — Docker, GitHub) não serve a um
+#       cliente nosso. Quem chega à raiz sem sessão vai para a entrada, como já
+#       acontece em qualquer outra página. Troca-se uma linha do controlador; a
+#       vista do upstream fica intacta (só deixa de ser usada). A atribuição
+#       «Powered by DocuSeal» continua nos formulários de assinatura (secção 2).
+trocar('app/controllers/dashboard_controller.rb', "    render 'pages/landing'\n",
+       "    redirect_to new_user_session_path\n")
+
 if $erros.any?
   warn 'BRANDING FALHOU — o upstream mudou e estas trocas já não encaixam:'
   $erros.each { |e| warn "  - #{e}" }
